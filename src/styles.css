@@ -8,10 +8,15 @@
 
 /*====================  THEME VARIABLES (Light & Dark) ====================*/
 .input-field {
-  @apply flex w-full border border-gray-200 px-3 py-2 text-base 
+  @apply flex w-full 
+    border border-gray-200 
+    px-3 py-2 
+    text-sm sm:text-base
     file:border-0 file:bg-transparent file:text-sm file:font-medium 
-    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600
-    disabled:cursor-not-allowed disabled:opacity-50 md:text-sm my-1;
+    focus-visible:outline-none 
+    focus-visible:ring-2 focus-visible:ring-blue-600
+    disabled:cursor-not-allowed disabled:opacity-50
+    transition-all duration-150;
 }
 
 .geist-mono {
