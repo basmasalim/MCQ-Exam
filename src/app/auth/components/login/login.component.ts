@@ -1,9 +1,10 @@
 import { Component, signal } from '@angular/core';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
+import { RouterOutlet, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
-  imports: [ButtonComponent],
+  imports: [ButtonComponent, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
