@@ -10,4 +10,6 @@ export class ButtonComponent {
   @Input({ required: true }) btnDesc!: Signal<string>;
   @Input() classes?: Signal<string>;
   @Input({ required: true }) onClick!: () => void;
+  // @Input() disabled?: Signal<boolean>;
+  @Input() disabled?: boolean;
 }
