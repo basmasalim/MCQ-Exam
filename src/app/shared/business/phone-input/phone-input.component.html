@@ -43,7 +43,7 @@
     <!-- Dropdown List -->
     @if (dropdownOpen()) {
       <div
-        class="absolute z-50 top-full -left-2/5 mt-0.5 w-80 bg-white border border-gray-200 rounded shadow-lg"
+        class="absolute z-50 top-full left-0 md:-left-2/5 mt-0.5 w-64 sm:w-80 bg-white border border-gray-200 rounded shadow-lg"
         (click)="$event.stopPropagation()"
       >
         <!-- Search input -->
@@ -61,7 +61,7 @@
         </div>
 
         <!-- Countries list -->
-        <ul class="max-h-64 overflow-y-auto">
+        <ul class="max-h-64 overflow-y-scroll overflow-x-hidden">
           @for (country of filteredCountries(); track country.cca2) {
             <li
               (click)="selectCountry(country)"
