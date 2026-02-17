@@ -16,7 +16,12 @@
       </app-form-field>
 
       <!-- ====================== Phone Number Field ====================== -->
-      <app-phone-input [field]="registrationForm.phone"> </app-phone-input>
+      <app-phone-input
+        [field]="registrationForm.phone"
+        (phoneChange)="onPhoneChange($event)"
+        (phoneValid)="onPhoneValid($event)"
+      >
+      </app-phone-input>
 
       <!-- ====================== Password ====================== -->
       <app-password-input label="Password" [field]="registrationForm.password">

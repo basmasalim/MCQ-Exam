@@ -1,56 +1,60 @@
-import { Component, Input, signal, computed, inject, effect, HostListener } from '@angular/core';
-import { FormField } from '@angular/forms/signals';
-import { CountryService } from '../../../core/services/country/country.service';
-import { ICountry } from '../../../core/interfaces/i-country.interface';
+import {
+  Component,
+  Input,
+  signal,
+  computed,
+  inject,
+  effect,
+  HostListener,
+  Output,
+  EventEmitter,
+} from '@angular/core';
+import { PhoneService } from './services/phone.service';
+import { PhoneCountry } from '../../../core/interfaces/phone-country.interface';
 
 @Component({
   selector: 'app-phone-input',
-  imports: [FormField],
+  imports: [],
   templateUrl: './phone-input.component.html',
   styleUrl: './phone-input.component.css',
 })
 export class PhoneInputComponent {
-  private countryService = inject(CountryService);
+  private phoneService = inject(PhoneService);
 
-  countries = signal<ICountry[]>([]);
+  // Computed signals from PhoneService
+  countries = this.phoneService.countriesSignal;
+  selectedCountry = this.phoneService.selectedCountrySignal;
+  phoneNumber = this.phoneService.phoneNumberSignal;
+  isValid = this.phoneService.isValidSignal;
+  validationError = this.phoneService.validationErrorSignal;
+  formattedNumber = this.phoneService.formattedNumberSignal;
+
+  // Local component state
   dropdownOpen = signal(false);
-  selectedCountry = signal<ICountry | null>(null);
   searchTerm = signal('');
 
   @Input({ required: true }) field!: any;
   @Input() label = 'Phone Number';
 
+  // Output events for form integration
+  @Output() phoneChange = new EventEmitter<string>();
+  @Output() phoneValid = new EventEmitter<boolean>();
+
   // Computed signal for filtered countries
   filteredCountries = computed(() => {
-    const countries = this.countries();
-    const term = this.searchTerm().toLowerCase();
-
-    if (!term) return countries;
-
-    return countries.filter(
-      (country) =>
-        country.name.common.toLowerCase().includes(term) ||
-        country.cca2.toLowerCase().includes(term),
-    );
+    return this.phoneService.filterCountries(this.searchTerm());
   });
 
   constructor() {
+    // Emit changes when phone number becomes valid
     effect(() => {
-      const countries = this.countries();
-      if (countries.length > 0 && !this.selectedCountry()) {
-        // Set Egypt as default country (cca2: EG)
-        const egypt = countries.find((country) => country.cca2 === 'EG');
-        if (egypt) {
-          this.selectedCountry.set(egypt);
-        }
+      if (this.isValid() && this.formattedNumber()) {
+        this.phoneChange.emit(this.formattedNumber());
+        this.phoneValid.emit(true);
+      } else {
+        this.phoneChange.emit('');
+        this.phoneValid.emit(false);
       }
-    });
-  }
-
-  ngOnInit() {
-    this.countryService.getCountrys().subscribe((countries) => {
-      this.countries.set(countries);
-      console.log('countries', countries);
     });
   }
 
@@ -58,10 +62,21 @@ export class PhoneInputComponent {
     this.dropdownOpen.set(!this.dropdownOpen());
   }
 
-  selectCountry(country: ICountry) {
-    this.selectedCountry.set(country);
+  selectCountry(country: PhoneCountry) {
+    this.phoneService.selectCountry(country);
     this.searchTerm.set(''); // Clear search when selecting a country
     this.dropdownOpen.set(false);
+  }
+
+  onPhoneNumberChange(event: Event) {
+    const target = event.target as HTMLInputElement;
+    const rawPhone = target.value.replace(/\D/g, ''); // Remove non-digits
+    const formattedPhone = this.phoneService.formatPhoneNumber(rawPhone);
+
+    this.phoneService.updatePhoneNumber(formattedPhone);
+
+    // Update input value with formatted number
+    target.value = formattedPhone;
   }
 
   onSearchChange(event: Event) {
@@ -82,5 +97,23 @@ export class PhoneInputComponent {
     if (!dropdownElement && this.dropdownOpen()) {
       this.closeDropdown();
     }
+  }
+
+  // Helper method to get validation state for UI
+  getValidationState(): 'valid' | 'invalid' | 'empty' {
+    if (!this.phoneNumber()) return 'empty';
+    return this.isValid() ? 'valid' : 'invalid';
+  }
+
+  // Helper method to get display phone number
+  getDisplayPhoneNumber(): string {
+    if (this.isValid() && this.formattedNumber()) {
+      return this.formattedNumber();
+    }
+    const country = this.selectedCountry();
+    if (country && this.phoneNumber()) {
+      return country.idd.root + this.phoneNumber();
+    }
+    return this.phoneNumber() || '';
   }
 }

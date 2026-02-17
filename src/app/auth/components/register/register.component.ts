@@ -21,6 +21,9 @@ import { PasswordInputComponent } from '../../../shared/business/password-input/
   styleUrl: './register.component.css',
 })
 export class RegisterComponent {
+  phoneValue = signal('');
+  isValid = signal(false);
+
   btnText = signal('Create Account');
   btnClasses = signal('w-full');
 
@@ -38,4 +41,12 @@ export class RegisterComponent {
   });
 
   registrationForm = form<RegisterFormModel>(this.formModel, registerFormSchema);
+
+  onPhoneChange(phone: string) {
+    this.phoneValue.set(phone);
+  }
+
+  onPhoneValid(valid: boolean) {
+    this.isValid.set(valid);
+  }
 }
