@@ -5,8 +5,8 @@ import { RegisterFormModel } from './register.model';
 import { form } from '@angular/forms/signals';
 import { registerFormSchema } from './register.schema';
 import { FormFieldComponent } from '../../../shared/ui/form-field/form-field.component';
-import { PhoneInputComponent } from '../../../shared/business/phone-input/phone-input.component';
-import { PasswordInputComponent } from '../../../shared/business/password-input/password-input.component';
+import { PhoneInputComponent } from './phone-input/phone-input.component';
+import { PasswordInputComponent } from './password-input/password-input.component';
 
 @Component({
   selector: 'app-register',

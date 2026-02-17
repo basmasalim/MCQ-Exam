@@ -6,13 +6,12 @@ import {
   parsePhoneNumber,
   isValidPhoneNumber,
   AsYouType,
-  PhoneNumber,
 } from 'libphonenumber-js';
 import {
   PhoneCountry,
-  PhoneValidationResult,
   PhoneState,
-} from '../../../../core/interfaces/phone-country.interface';
+  PhoneValidationResult,
+} from '../interfaces/phone-country.interface';
 
 @Injectable({
   providedIn: 'root',

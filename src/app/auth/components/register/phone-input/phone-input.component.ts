@@ -10,8 +10,7 @@ import {
   EventEmitter,
 } from '@angular/core';
 import { PhoneService } from './services/phone.service';
-import { PhoneCountry } from '../../../core/interfaces/phone-country.interface';
-
+import { PhoneCountry } from './interfaces/phone-country.interface';
 @Component({
   selector: 'app-phone-input',
   imports: [],
