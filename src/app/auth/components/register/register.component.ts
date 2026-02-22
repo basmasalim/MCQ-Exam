@@ -28,7 +28,6 @@ export class RegisterComponent {
   btnClasses = signal('w-full');
 
   handleClick() {
-    this.btnText.set('Clicked ✅');
     console.log(this.registrationForm().value());
   }
 
