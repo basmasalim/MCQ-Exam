@@ -43,7 +43,10 @@ export class RegisterComponent {
   registrationForm = form<RegisterFormModel>(this.formModel, registerFormSchema);
 
   onPhoneChange(phone: string) {
-    this.phoneValue.set(phone);
+    this.formModel.update((model) => ({
+      ...model,
+      phone: phone,
+    }));
   }
 
   onPhoneValid(valid: boolean) {
